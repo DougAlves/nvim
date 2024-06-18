@@ -1,8 +1,8 @@
-require('remaps')
+local c = require 'remaps'
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -152,7 +152,7 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',    opts = {} },
+  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
@@ -187,7 +187,7 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     enabled = false,
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
@@ -217,6 +217,10 @@ require('lazy').setup({
   -- you do for a plugin at the top level, you can do for a dependency.
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
+  {
+    'nvim-tree/nvim-web-devicons',
+    enabled = vim.g.have_nerd_font,
+  },
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -240,7 +244,6 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -334,11 +337,11 @@ require('lazy').setup({
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       opts = {} },
+      { 'j-hui/fidget.nvim', opts = {} },
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
-      { 'folke/neodev.nvim',       opts = {} },
+      { 'folke/neodev.nvim', opts = {} },
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -544,11 +547,12 @@ require('lazy').setup({
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
-    enabled = false,
+    enabled = true,
     keys = {
       {
-        '<leader>f',
+        '<M-f>',
         function()
+          print 'formating...'
           require('conform').format { async = true, lsp_fallback = true }
         end,
         mode = '',
@@ -561,10 +565,9 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
         return {
           timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+          lsp_fallback = false,
         }
       end,
       formatters_by_ft = {
@@ -710,7 +713,23 @@ require('lazy').setup({
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-
+  { 'rose-pine/neovim', name = 'rose-pine' },
+  { 'savq/melange-nvim' },
+  { 'rebelot/kanagawa.nvim' },
+  {
+    'AlexvZyl/nordic.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('nordic').load()
+    end,
+  },
+  {
+    'sainnhe/gruvbox-material',
+  },
+  {
+    'catppuccin/nvim',
+  },
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
@@ -824,6 +843,6 @@ require('lazy').setup({
     },
   },
 })
-
+require 'options'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
