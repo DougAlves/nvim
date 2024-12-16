@@ -7,6 +7,9 @@ vim.keymap.set('n', '<leader>f', function()
 end)
 vim.keymap.set('n', '<leader>w', '*')
 
+vim.keymap.set('n', '<M-j>', ':cnext<CR>')
+vim.keymap.set('n', '<M-k>', ':cprev<CR>')
+
 return function(color)
   print(color)
   color = color or 'rose-pine'
